@@ -237,9 +237,92 @@
             padding: 0.8rem 1.8rem;
             margin-top: 1rem;
         }
+        
+        /* Modal styles for name input */
+        .name-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 32px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-content h2 {
+            color: #1A6B5A;
+            margin-bottom: 0.5rem;
+        }
+        .modal-content p {
+            color: #4F6F8F;
+            margin-bottom: 1.5rem;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+            border: 2px solid #E2E9F2;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        .modal-content input:focus {
+            outline: none;
+            border-color: #1A6B5A;
+        }
+        .start-btn {
+            background: #1A6B5A;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        .start-btn:hover {
+            background: #0e4d40;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
+
+<!-- ========== MODAL FOR NAME INPUT ========== -->
+<div id="nameModal" class="name-modal">
+    <div class="modal-content">
+        <div style="font-size: 3rem;">👋🏅</div>
+        <h2>Welcome to the Assessment</h2>
+        <p>Please enter your details below to get your digital badge.</p>
+        <input type="text" id="userNameInput" placeholder="Your full name *" required>
+        <input type="email" id="userEmailInput" placeholder="Your email address *" required>
+        <input type="text" id="userPositionInput" placeholder="Your position / title (optional)">
+        <button id="startAssessmentBtn" class="start-btn">📝 Start Assessment →</button>
+    </div>
+</div>
+
 <div class="course-card">
     <div class="header-tag">
         <span>THE RESILIENCE TOOLKIT</span>
@@ -276,47 +359,95 @@
 
 <script>
 // ============================================
-// GOOGLE SHEETS WEB APP URL - UPDATE THIS AFTER DEPLOY
+// GOOGLE SHEETS WEB APP URL
 // ============================================
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9VmdtjxdobUdJwUJw-wYJahjJbiA7uNacpmOh1hUVo5nSvc4G6lBWiOOd2Dw1FpM/exec';
 
 // ============================================
-function getUserData() {
-    let name = '', email = '', position = '';
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    if (urlParams.has('name')) {
-        name = decodeURIComponent(urlParams.get('name'));
-        email = decodeURIComponent(urlParams.get('email') || '');
-        position = decodeURIComponent(urlParams.get('position') || '');
-        
-        if (name && name !== '') {
-            localStorage.setItem('course_user_name', name);
-            localStorage.setItem('course_user_email', email);
-            localStorage.setItem('course_user_position', position);
-        }
-    }
-    
-    if (!name || name === '') {
-        let n = localStorage.getItem('course_user_name');
-        if (n && n !== 'null' && n !== 'undefined' && n !== 'Guest' && n.trim() !== '') {
-            name = n.trim();
-            email = (localStorage.getItem('course_user_email') || '').trim();
-            position = (localStorage.getItem('course_user_position') || '').trim();
-        }
-    }
-    
-    if (!name || name === '') {
-        name = 'Learner';
-    }
-    
-    return { name: name, email: email || 'Not provided', position: position || 'Not specified' };
+// MODAL AND USER DATA HANDLING
+// ============================================
+
+function saveUserDataToLocalStorage(name, email, position) {
+    localStorage.setItem('course_user_name', name);
+    localStorage.setItem('course_user_email', email);
+    localStorage.setItem('course_user_position', position);
 }
+
+function getUserDataFromLocalStorage() {
+    let name = localStorage.getItem('course_user_name') || '';
+    let email = localStorage.getItem('course_user_email') || '';
+    let position = localStorage.getItem('course_user_position') || '';
+    return { name, email, position };
+}
+
+function showModal() {
+    const modal = document.getElementById('nameModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function hideModal() {
+    const modal = document.getElementById('nameModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function updateUserBadge(name) {
+    const userBadge = document.getElementById('userBadge');
+    if (userBadge && name) {
+        userBadge.innerText = `👤 ${name}`;
+    }
+}
+
+// Check if user data exists
+function initializeUser() {
+    const user = getUserDataFromLocalStorage();
+    if (user.name && user.name !== 'Guest' && user.name !== 'Learner' && user.name !== '') {
+        // Data exists - hide modal and update badge
+        hideModal();
+        updateUserBadge(user.name);
+        return true;
+    } else {
+        // No data - show modal
+        showModal();
+        return false;
+    }
+}
+
+// Set up modal button event
+function setupModalButton() {
+    const startBtn = document.getElementById('startAssessmentBtn');
+    if (startBtn) {
+        startBtn.addEventListener('click', function() {
+            const name = document.getElementById('userNameInput').value.trim();
+            const email = document.getElementById('userEmailInput').value.trim();
+            const position = document.getElementById('userPositionInput').value.trim();
+            
+            if (!name || !email) {
+                alert('Please enter your name and email address.');
+                return;
+            }
+            
+            saveUserDataToLocalStorage(name, email, position);
+            updateUserBadge(name);
+            hideModal();
+        });
+    }
+}
+
+// ============================================
+// GET USER DATA (from localStorage)
+// ============================================
+function getUserData() {
+    const user = getUserDataFromLocalStorage();
+    return { 
+        name: user.name || 'Learner', 
+        email: user.email || 'Not provided', 
+        position: user.position || 'Not specified' 
+    };
+}
+
 const currentUser = getUserData();
-const userBadge = document.getElementById('userBadge');
-if (userBadge) {
-    userBadge.innerText = currentUser.name !== 'Guest' ? `👤 ${currentUser.name}` : `👤 Learner`;
+if (document.getElementById('userBadge') && currentUser.name !== 'Learner') {
+    document.getElementById('userBadge').innerText = `👤 ${currentUser.name}`;
 }
 
 function showToast(message, isError = false) {
@@ -330,10 +461,10 @@ function showToast(message, isError = false) {
 }
 
 // ============================================
-// SEND DATA TO GOOGLE SHEETS - CORRECTED VERSION
+// SEND DATA TO GOOGLE SHEETS
 // ============================================
 async function sendToGoogleSheet(answersData) {
-    var user = getUserData();
+    const user = getUserData();
     
     var payload = {
         module: 'Post Assessment',
@@ -529,7 +660,7 @@ function calculateCompletionScore() {
 
 function showResults() {
     const completionScore = calculateCompletionScore();
-    const userName = currentUser.name !== 'Guest' ? currentUser.name : 'Leader';
+    const userName = currentUser.name !== 'Learner' ? currentUser.name : 'Leader';
     
     let resultsHtml = `
         <div class="results-box">
@@ -644,12 +775,24 @@ function handlePrev() {
     }
 }
 
+// Initialize the page
+function init() {
+    const userDataExists = initializeUser();
+    setupModalButton();
+    
+    // If user data exists, continue with assessment
+    if (userDataExists) {
+        renderQuestion();
+        updateProgress();
+    }
+}
+
 document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults);
 prevBtn.addEventListener('click', handlePrev);
 nextBtn.addEventListener('click', handleNext);
 
-renderQuestion();
-updateProgress();
+// Start initialization
+init();
 </script>
 </body>
 </html>
