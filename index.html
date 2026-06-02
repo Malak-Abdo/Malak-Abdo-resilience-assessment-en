@@ -310,7 +310,7 @@
 </head>
 <body>
 
-<!-- MODAL FOR NAME INPUT -->
+<!-- MODAL FOR NAME INPUT - Always visible at start -->
 <div id="nameModal" class="name-modal" style="display: flex;">
     <div class="modal-content">
         <div style="font-size: 3rem;">👋🏅</div>
@@ -392,7 +392,7 @@ function updateUserBadge(name) {
     }
 }
 
-// Setup modal button
+// Setup modal button - THIS IS THE KEY FUNCTION
 function setupModalButton() {
     const startBtn = document.getElementById('startAssessmentBtn');
     if (startBtn) {
@@ -427,9 +427,6 @@ function getUserData() {
 }
 
 const currentUser = getUserData();
-if (document.getElementById('userBadge') && currentUser.name !== 'Learner') {
-    document.getElementById('userBadge').innerText = `👤 ${currentUser.name}`;
-}
 
 function showToast(message, isError = false) {
     const existing = document.querySelector('.toast-message');
@@ -577,7 +574,7 @@ function calculateCompletionScore() {
 
 function showResults() {
     const completionScore = calculateCompletionScore();
-    const userName = currentUser.name !== 'Learner' ? currentUser.name : 'Leader';
+    const userName = getUserData().name;
     
     let resultsHtml = `<div class="results-box"><div class="congrats-message"><h3>🎉 Thank you, ${userName}! 🎉</h3><p>You have successfully completed The Resilience Toolkit post-course assessment.</p></div><div class="tools-list"><h4>🧰 Your Resilience Toolkit is now ready</h4><ul><li><strong>🔍 The S.A.F.E. Framework</strong> — Stop & Breathe, Assess Reality, Find Smallest Action, Execute & Evaluate</li><li><strong>🔄 Mindset Shifting</strong> — Moving from Victim → Agent, Scarcity → Abundance, Panic → Curious</li><li><strong>🎯 Learning Intentions vs Performance Goals</strong> — Learn the terrain first</li><li><strong>⚙️ Executive Habits</strong> — The Habit Loop (Cue → Routine → Reward)</li><li><strong>⏰ The 7 AM Protocol</strong> — Pre-authorized scripts for crisis moments</li></ul></div><div><strong>✅ Assessment complete:</strong> ${completionScore}%</div>`;
     
@@ -664,22 +661,13 @@ function handlePrev() {
     }
 }
 
-// Initialize page - show modal always first
+// Initialize page
 document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults);
 prevBtn.addEventListener('click', handlePrev);
 nextBtn.addEventListener('click', handleNext);
 
 // Setup modal button
 setupModalButton();
-
-// Check if user already has data, if yes, hide modal and show questions
-const existingUser = getUserDataFromLocalStorage();
-if (existingUser.name && existingUser.name !== '' && existingUser.name !== 'Learner') {
-    hideModal();
-    updateUserBadge(existingUser.name);
-    renderQuestion();
-    updateProgress();
-}
 </script>
 </body>
 </html>
