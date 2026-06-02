@@ -311,7 +311,7 @@
 <body>
 
 <!-- MODAL FOR NAME INPUT -->
-<div id="nameModal" class="name-modal">
+<div id="nameModal" class="name-modal" style="display: flex;">
     <div class="modal-content">
         <div style="font-size: 3rem;">👋🏅</div>
         <h2>Welcome to the Assessment</h2>
@@ -392,18 +392,6 @@ function updateUserBadge(name) {
     }
 }
 
-// Initialize - check if user data exists
-function initializeUser() {
-    const user = getUserDataFromLocalStorage();
-    if (user.name && user.name !== '' && user.name !== 'Guest' && user.name !== 'Learner') {
-        // Data exists - hide modal
-        hideModal();
-        updateUserBadge(user.name);
-        return true;
-    }
-    return false;
-}
-
 // Setup modal button
 function setupModalButton() {
     const startBtn = document.getElementById('startAssessmentBtn');
@@ -422,8 +410,9 @@ function setupModalButton() {
             updateUserBadge(name);
             hideModal();
             
-            // Refresh user data and start assessment
-            location.reload();
+            // Start the assessment
+            renderQuestion();
+            updateProgress();
         });
     }
 }
@@ -675,22 +664,22 @@ function handlePrev() {
     }
 }
 
-// Initialize page
-function init() {
-    const hasData = initializeUser();
-    setupModalButton();
-    
-    if (hasData) {
-        renderQuestion();
-        updateProgress();
-    }
-}
-
+// Initialize page - show modal always first
 document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults);
 prevBtn.addEventListener('click', handlePrev);
 nextBtn.addEventListener('click', handleNext);
 
-init();
+// Setup modal button
+setupModalButton();
+
+// Check if user already has data, if yes, hide modal and show questions
+const existingUser = getUserDataFromLocalStorage();
+if (existingUser.name && existingUser.name !== '' && existingUser.name !== 'Learner') {
+    hideModal();
+    updateUserBadge(existingUser.name);
+    renderQuestion();
+    updateProgress();
+}
 </script>
 </body>
 </html>
