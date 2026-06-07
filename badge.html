@@ -82,11 +82,12 @@
             font-size: 3rem;
             margin-bottom: 0.5rem;
         }
-        .course-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+        .program-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
             margin-bottom: 1rem;
+            color: #E8A735;
         }
         .graduate-name {
             font-size: 2.5rem;
@@ -96,10 +97,17 @@
             word-break: break-word;
         }
         .achievement-text {
-            font-size: 0.9rem;
+            font-size: 1rem;
+            font-weight: 500;
             opacity: 0.9;
-            margin: 1rem 0;
+            margin: 0.5rem 0;
             line-height: 1.4;
+        }
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            color: #E8A735;
         }
         .date-text {
             font-size: 0.8rem;
@@ -171,8 +179,14 @@
             .graduate-name {
                 font-size: 1.8rem;
             }
-            .course-title {
+            .program-title {
                 font-size: 1rem;
+            }
+            .course-title {
+                font-size: 0.95rem;
+            }
+            .achievement-text {
+                font-size: 0.9rem;
             }
             .btn-group button {
                 padding: 0.6rem 1.2rem;
@@ -193,7 +207,7 @@
     <!-- Clean Minimal Share Card -->
     <div class="share-card" id="shareCard">
         
-        <!-- ===== HUMANITARIAN VALLEY LOGO ADDED HERE ===== -->
+        <!-- ===== HUMANITARIAN VALLEY LOGO ===== -->
         <div class="hv-logo">
             <div class="hv-logo-icon">
                 <span>🏔️</span>
@@ -206,20 +220,29 @@
         </div>
         <div class="hv-divider"></div>
         
+        <!-- 🏅 Badge Icon -->
         <div class="badge-icon">🏅</div>
-        <div class="course-title">THE RESILIENCE TOOLKIT</div>
+        
+        <!-- Conflict-Zone Leadership Program -->
+        <div class="program-title">Conflict-Zone Leadership Program</div>
+        
+        <!-- User Name -->
         <div class="graduate-name" id="graduateName">Loading...</div>
-        <div class="achievement-text">
-            has successfully completed the<br>
-            Conflict-Zone Leadership Program
-        </div>
+        
+        <!-- has successfully completed the -->
+        <div class="achievement-text">has successfully completed the</div>
+        
+        <!-- THE RESILIENCE TOOLKIT -->
+        <div class="course-title">THE RESILIENCE TOOLKIT</div>
+        
+        <!-- Completion Date -->
         <div class="date-text" id="completionDate">Completed: Loading...</div>
     </div>
 
     <!-- Buttons below the card -->
     <div class="btn-group">
         <button id="shareLinkedInBtn" class="btn-linkedin">🔗 Share on LinkedIn</button>
-        <button id="copyCardBtn">🖼️ Copy Card as Image</button>
+        <button id="copyCardBtn" class="btn-copy">🖼️ Copy Card as Image</button>
     </div>
 </div>
 
@@ -373,13 +396,13 @@ function generateCleanLinkedInPost() {
     
     return `🏅
 
-THE RESILIENCE TOOLKIT
+Conflict-Zone Leadership Program
 
 ${userName}
 
 has successfully completed the
 
-Conflict-Zone Leadership Program
+THE RESILIENCE TOOLKIT
 
 Completed: ${dateString}`;
 }
