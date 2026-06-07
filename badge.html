@@ -223,8 +223,8 @@
         <!-- 🏅 Badge Icon -->
         <div class="badge-icon">🏅</div>
         
-        <!-- Conflict-Zone Leadership Program -->
-        <div class="program-title">Conflict-Zone Leadership Program</div>
+        <!-- Conflict-Zone Leadership -->
+        <div class="program-title">Conflict-Zone Leadership</div>
         
         <!-- User Name -->
         <div class="graduate-name" id="graduateName">Loading...</div>
@@ -301,7 +301,7 @@ function sendBadgeDataToSheet() {
         userPosition: userData.position,
         timestamp: today.toISOString(),
         completionDate: today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-        badgeType: 'Conflict-Zone Leadership Program',
+        badgeType: 'Conflict-Zone Leadership',
         status: 'Completed'
     };
     
@@ -396,7 +396,7 @@ function generateCleanLinkedInPost() {
     
     return `🏅
 
-Conflict-Zone Leadership Program
+Conflict-Zone Leadership
 
 ${userName}
 
