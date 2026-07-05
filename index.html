@@ -399,37 +399,26 @@
 // STORAGE SUFFIX & GOOGLE SHEETS URL
 // ============================================
 const storageSuffix = '_en';
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxc2XD8bST_g-AbLnxomUb3fgx40W7QngQBS0Maz8lREhkyhmGOlk9SWuBsDhNYbtbMbw/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycKuADkC9M1dE6bIjh3wAMae9HBJPcZBspGCDFJE3UEVR9N9LX7xgHG77cC4zNEanrpw/exec';
 
 // ============================================
-// USER DATA
+// USER DATA - SAME AS MODULE 6
 // ============================================
-function saveUserDataToLocalStorage(name, email, position) {
-    localStorage.setItem('course_user_name', name);
-    localStorage.setItem('course_user_email', email);
-    localStorage.setItem('course_user_position', position);
-}
-
 function getUserData() {
-    let name = localStorage.getItem('course_user_name') || 'Guest';
-    let email = localStorage.getItem('course_user_email') || 'guest@example.com';
-    let position = localStorage.getItem('course_user_position') || 'Not specified';
-    return { name, email, position };
+    let name = 'Guest', email = 'guest@example.com', position = 'Not specified';
+    try {
+        let cu = localStorage.getItem('currentUser');
+        if (cu) { let u = JSON.parse(cu); if (u && u.name && u.name !== 'Guest' && u.name.trim()) { name = u.name.trim(); email = (u.email || '').trim() || 'guest@example.com'; position = (u.position || '').trim() || 'Not specified'; return { name, email, position }; } }
+        let users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.length) { let u = users[users.length-1]; if (u && u.name && u.name.trim() && u.name !== 'Guest') { name = u.name.trim(); email = (u.email || '').trim() || 'guest@example.com'; position = (u.position || '').trim() || 'Not specified'; return { name, email, position }; } }
+        let n = localStorage.getItem('course_user_name');
+        if (n && n !== 'null' && n !== 'undefined' && n !== 'Guest' && n.trim()) { name = n.trim(); email = localStorage.getItem('course_user_email') || 'guest@example.com'; position = localStorage.getItem('course_user_position') || 'Not specified'; return { name, email, position }; }
+        let saved = localStorage.getItem('course_user_name' + storageSuffix);
+        if (saved && saved !== 'null' && saved !== 'Guest' && saved.trim()) { name = saved.trim(); email = localStorage.getItem('course_user_email' + storageSuffix) || 'guest@example.com'; position = localStorage.getItem('course_user_position' + storageSuffix) || 'Not specified'; return { name, email, position }; }
+    } catch(e) {}
+    return { name: 'Guest', email: 'guest@example.com', position: 'Not specified' };
 }
 
-function hideModal() {
-    const modal = document.getElementById('nameModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function updateUserBadge(name) {
-    const userBadge = document.getElementById('userBadge');
-    if (userBadge && name && name !== 'Learner' && name !== 'Guest') {
-        userBadge.innerText = `👤 ${name}`;
-    }
-}
-
-// Setup modal button
 function setupModalButton() {
     const startBtn = document.getElementById('startAssessmentBtn');
     if (startBtn) {
@@ -443,18 +432,20 @@ function setupModalButton() {
                 return;
             }
             
-            saveUserDataToLocalStorage(name, email, position);
-            updateUserBadge(name);
-            hideModal();
+            localStorage.setItem('course_user_name', name);
+            localStorage.setItem('course_user_email', email);
+            localStorage.setItem('course_user_position', position);
             
-            // Start the assessment
+            const badge = document.getElementById('userBadge');
+            if (badge) badge.innerText = `👤 ${name}`;
+            
+            document.getElementById('nameModal').style.display = 'none';
+            
             renderQuestion();
             updateProgress();
         });
     }
 }
-
-const currentUser = getUserData();
 
 function showToast(message, isError = false) {
     const existing = document.querySelector('.toast-message');
@@ -616,7 +607,7 @@ function loadSavedAnswers() {
 }
 
 // ============================================
-// HISTORY TRACKING - SEND ON NEXT
+// HISTORY TRACKING - EXACTLY LIKE MODULE 6
 // ============================================
 function initHistory() {
     if (!localStorage.getItem('post_assessment_history_data' + storageSuffix)) {
@@ -627,7 +618,7 @@ function initHistory() {
 }
 initHistory();
 
-function sendDataOnNext() {
+function sendPartialData() {
     const user = getUserData();
     const answersData = collectAnswers();
     let history = JSON.parse(localStorage.getItem('post_assessment_history_data' + storageSuffix) || '{}');
@@ -754,7 +745,46 @@ function showResults() {
 }
 
 // ============================================
-// SEND RESULTS
+// NAVIGATION - EXACTLY LIKE MODULE 6
+// ============================================
+function handleNext() {
+    const currentQ = assessmentQuestions[currentIndex];
+    let currentAnswered = false;
+    if (currentQ.type === 'text') {
+        currentAnswered = (answers[currentIndex+1] && answers[currentIndex+1].trim() !== '');
+    } else {
+        currentAnswered = (answers[currentIndex+1] !== null && answers[currentIndex+1] !== '');
+    }
+    
+    if (!currentAnswered) {
+        showToast('⚠️ Please answer the current question.', true);
+        return;
+    }
+    
+    // ✅ Send data to Google Sheets when Next is clicked (like Module 6)
+    sendPartialData();
+    
+    if (currentIndex < assessmentQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+        prevBtn.disabled = false;
+        updateProgress();
+    } else {
+        showResults();
+    }
+}
+
+function handlePrev() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+        if (currentIndex === 0) prevBtn.disabled = true;
+        updateProgress();
+    }
+}
+
+// ============================================
+// SEND RESULTS - EXACTLY LIKE MODULE 6
 // ============================================
 async function sendResults() {
     const sendBtn = document.getElementById('sendResultsBtn');
@@ -797,46 +827,7 @@ async function sendResults() {
 }
 
 // ============================================
-// NAVIGATION
-// ============================================
-function handleNext() {
-    const currentQ = assessmentQuestions[currentIndex];
-    let currentAnswered = false;
-    if (currentQ.type === 'text') {
-        currentAnswered = (answers[currentIndex+1] && answers[currentIndex+1].trim() !== '');
-    } else {
-        currentAnswered = (answers[currentIndex+1] !== null && answers[currentIndex+1] !== '');
-    }
-    
-    if (!currentAnswered) {
-        showToast('⚠️ Please answer the current question.', true);
-        return;
-    }
-    
-    // ✅ Send data to Google Sheets when Next is clicked
-    sendDataOnNext();
-    
-    if (currentIndex < assessmentQuestions.length - 1) {
-        currentIndex++;
-        renderQuestion();
-        prevBtn.disabled = false;
-        updateProgress();
-    } else {
-        showResults();
-    }
-}
-
-function handlePrev() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        renderQuestion();
-        if (currentIndex === 0) prevBtn.disabled = true;
-        updateProgress();
-    }
-}
-
-// ============================================
-// EVENT BINDING
+// EVENT BINDING - EXACTLY LIKE MODULE 6
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     loadSavedAnswers();
