@@ -402,7 +402,7 @@ const storageSuffix = '_en';
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycKuADkC9M1dE6bIjh3wAMae9HBJPcZBspGCDFJE3UEVR9N9LX7xgHG77cC4zNEanrpw/exec';
 
 // ============================================
-// USER DATA - EXACTLY LIKE OTHER MODULES
+// USER DATA
 // ============================================
 function saveUserDataToLocalStorage(name, email, position) {
     localStorage.setItem('course_user_name', name);
@@ -467,7 +467,7 @@ function showToast(message, isError = false) {
 }
 
 // ============================================
-// ASSESSMENT QUESTIONS - ORIGINAL
+// ASSESSMENT QUESTIONS
 // ============================================
 const assessmentQuestions = [
     { id: 1, text: "Do you feel confident you could use the S.A.F.E. framework in a future crisis?", type: "scale", min: 1, max: 5, labels: ["Not confident at all", "Slightly confident", "Moderately confident", "Very confident", "Extremely confident"] },
@@ -530,7 +530,7 @@ function updateProgress() {
 }
 
 // ============================================
-// RENDER QUESTION - ORIGINAL
+// RENDER QUESTION
 // ============================================
 function renderQuestion() {
     const q = assessmentQuestions[currentIndex];
@@ -663,7 +663,14 @@ function sendDataOnNext() {
         userEmail: user.email,
         userPosition: user.position,
         timestamp: new Date().toISOString(),
-        answers: answersData,
+        answers: {
+            q1_confidence_safe: answersData.q1 || '',
+            q2_reaction_change: answersData.q2 || '',
+            q3_confidence_team: answersData.q3 || '',
+            q4_most_valuable: answersData.q4 || '',
+            q5_likelihood_use: answersData.q5 || '',
+            q6_overall_rating: answersData.q6 || ''
+        },
         history: history,
         changedFields: changed,
         totalChanges: totalChanges,
@@ -726,7 +733,7 @@ function calculateCompletionScore() {
 }
 
 // ============================================
-// SHOW RESULTS - ORIGINAL
+// SHOW RESULTS
 // ============================================
 function showResults() {
     const completionScore = calculateCompletionScore();
@@ -779,13 +786,13 @@ async function sendResults() {
         localStorage.setItem('course_completed' + storageSuffix, 'true');
         feedbackDiv.innerHTML = '✅ Assessment saved! Redirecting...';
         document.getElementById('badgeArea').style.display = 'block';
-        setTimeout(() => { window.location.href = 'badge.html'; }, 1500);
+        setTimeout(() => { window.location.href = 'certificate.html'; }, 1500);
     } else {
         localStorage.setItem('post_assessment_completed' + storageSuffix, 'true');
         localStorage.setItem('course_completed' + storageSuffix, 'true');
         feedbackDiv.innerHTML = '⚠️ Saved locally. Continuing...';
         document.getElementById('badgeArea').style.display = 'block';
-        setTimeout(() => { window.location.href = 'badge.html'; }, 1500);
+        setTimeout(() => { window.location.href = 'certificate.html'; }, 1500);
     }
 }
 
