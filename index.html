@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>The Resilience Toolkit · Pre-Course Assessment</title>
+    <title>The Resilience Toolkit · Post-Course Assessment</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background: #F4F7FC;
@@ -23,7 +27,11 @@
             padding: 1.8rem 1.5rem 2.2rem;
         }
         @media (max-width: 550px) {
-            .course-card { margin: 0.8rem; padding: 1.5rem 1.2rem; border-radius: 28px; }
+            .course-card {
+                margin: 0.8rem;
+                padding: 1.5rem 1.2rem;
+                border-radius: 28px;
+            }
         }
         .header-tag {
             font-size: 0.75rem;
@@ -32,839 +40,636 @@
             color: #1A6B5A;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-badge {
+            font-size: 0.7rem;
+            background: #E8F5E9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            color: #1A6B5A;
         }
         h1 {
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #0C2E3B;
-            line-height: 1.2;
-            margin-bottom: 0.25rem;
-        }
-        .subhead {
-            font-size: 1rem;
-            color: #4A627A;
-            margin-bottom: 1rem;
-            border-left: 3px solid #E8A735;
-            padding-left: 0.75rem;
-        }
-        .presenter { font-size: 0.85rem; color: #2C5F7A; margin-bottom: 1rem; font-weight: 500; }
-        .duration-badge {
-            display: inline-block;
-            background: #EFF3F8;
-            padding: 0.2rem 0.9rem;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #1A6B5A;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
         }
         .assessment-header {
             background: #F0F7F4;
             border-radius: 24px;
-            padding: 1.2rem 1.2rem;
+            padding: 1.2rem;
             margin-bottom: 1.5rem;
             border-left: 4px solid #E8A735;
         }
-        .assessment-header h2 { font-size: 1.3rem; font-weight: 700; color: #0C2E3B; margin-bottom: 0.3rem; }
-        .assessment-header .tagline { font-size: 0.85rem; color: #2C5F7A; font-weight: 500; margin-bottom: 0.5rem; }
-        .assessment-header .description { font-size: 0.85rem; color: #3E5A73; margin-bottom: 0.4rem; }
-        .assessment-header .meta { font-size: 0.7rem; color: #6C86A0; display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.6rem; }
-        .progress-area { background: #F0F4FA; border-radius: 60px; padding: 0.2rem; margin: 1rem 0 1.5rem 0; }
-        .progress-bar-fill { background: #1A6B5A; height: 6px; width: 0%; border-radius: 60px; transition: width 0.2s ease; }
-        .progress-stats { display: flex; justify-content: space-between; font-size: 0.7rem; color: #4F6F8F; margin-top: 0.3rem; }
-        .question-container { margin: 1.8rem 0; }
+        .progress-area {
+            background: #F0F4FA;
+            border-radius: 60px;
+            padding: 0.2rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .progress-bar-fill {
+            background: #1A6B5A;
+            height: 6px;
+            width: 0%;
+            border-radius: 60px;
+            transition: width 0.2s ease;
+        }
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #4F6F8F;
+            margin-top: 0.3rem;
+        }
         .question {
             background: #FEFEFE;
             border: 1px solid #E2E9F2;
             border-radius: 24px;
             padding: 1.2rem 1rem;
             margin-bottom: 1.5rem;
-            transition: 0.1s ease;
         }
-        .option {
-            display: flex; align-items: center; gap: 0.8rem;
-            padding: 0.6rem; border-radius: 60px;
-            cursor: pointer; transition: 0.1s; border: 1px solid transparent;
+        .scale-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
-        .option:hover { background: #F0F7F4; }
-        .option.selected { background: #E9F3F0; border-color: #1A6B5A; }
-        .option-letter {
-            width: 28px; height: 28px; background: #F1F5F9;
-            display: inline-flex; align-items: center; justify-content: center;
-            border-radius: 30px; font-size: 0.8rem; color: #1A6B5A; flex-shrink: 0;
-        }
-        .option.selected .option-letter { background: #1A6B5A; color: white; }
-        .option-text { font-size: 0.9rem; flex: 1; color: #2A4058; }
-        .option-sub { font-size: 0.75rem; color: #6C86A0; margin-top: 0.2rem; }
-        .scale-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
         .scale-item {
-            flex: 1; min-width: 70px; text-align: center;
-            background: #F1F5F9; padding: 0.5rem 0; border-radius: 48px;
-            cursor: pointer; font-weight: 500; font-size: 0.85rem;
-            transition: 0.1s; border: 1px solid transparent;
-        }
-        .scale-item.selected { background: #1A6B5A; color: white; border-color: #1A6B5A; }
-        .scale-label { font-size: 0.65rem; display: block; margin-top: 0.2rem; font-weight: normal; color: #6C86A0; }
-        .scale-item.selected .scale-label { color: #E0F0EA; }
-        .check-option {
-            background: #F1F5F9; padding: 0.5rem 1rem; border-radius: 40px;
-            display: inline-block; margin: 0.3rem; cursor: pointer;
-            transition: 0.1s; border: 1px solid transparent;
-        }
-        .check-option.selected { background: #1A6B5A; color: white; border-color: #1A6B5A; }
-        .nav-buttons {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 1.8rem; flex-wrap: wrap; gap: 0.8rem;
-        }
-        button {
-            background: #1A6B5A; border: none; color: white;
-            font-weight: 600; padding: 0.7rem 1.5rem; border-radius: 60px;
-            font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
-        }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .secondary { background: #E8A735; color: #2E3A2A; }
-        .reset-link { text-align: center; margin-top: 1rem; font-size: 0.7rem; }
-        .reset-link a { color: #8BA0B8; cursor: pointer; text-decoration: underline; }
-        .hidden { display: none; }
-        
-        .results-box {
-            border-radius: 24px;
-            padding: 1.8rem;
-            margin: 1rem 0;
+            flex: 1;
+            min-width: 60px;
             text-align: center;
+            background: #F1F5F9;
+            padding: 0.5rem 0;
+            border-radius: 48px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border: 1px solid transparent;
+            transition: 0.1s;
         }
-        .results-essential {
-            background: linear-gradient(135deg, #1A6B5A, #0e4d40);
+        .scale-item:hover {
+            background: #E3ECF3;
+        }
+        .scale-item.selected {
+            background: #1A6B5A;
             color: white;
         }
-        .results-valuable {
-            background: linear-gradient(135deg, #E8A735, #d4951e);
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+        button {
+            background: #1A6B5A;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        button:hover {
+            background: #0e4d40;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .secondary {
+            background: #E8A735;
             color: #2E3A2A;
         }
-        .results-optional {
-            background: #F0F4F9;
-            color: #4A627A;
-            border: 2px solid #8BA0B8;
+        .secondary:hover {
+            background: #d4951e;
         }
-        .motivation-message {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-top: 1.2rem;
-            padding-top: 1.2rem;
-            border-top: 2px solid rgba(255,255,255,0.3);
-            line-height: 1.6;
-        }
-        .results-optional .motivation-message { border-top-color: #8BA0B8; }
-        .welcome-message {
+        .results-box {
             background: #F0F7F4;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 1.5rem;
             margin: 1rem 0;
             text-align: center;
         }
-        .footer-note { font-size: 0.7rem; text-align: center; color: #8BA0B8; margin-top: 1.5rem; }
-        .badge-icon { font-size: 3rem; margin-bottom: 0.5rem; }
-        .action-buttons { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
-        .btn-module { background: #1A6B5A; color: white; }
-        .btn-reset { background: #B33A3A; color: white; }
-        .btn-reset:hover { background: #8B2A2A; }
-        .toast-notification {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #1A6B5A; color: white; padding: 12px 24px;
-            border-radius: 60px; font-size: 0.85rem; font-weight: 500;
-            z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .congrats-message {
+            background: linear-gradient(135deg, #E8A735 0%, #D4951E 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: none;
+            color: white;
+        }
+        .congrats-message h3 {
+            color: white;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .tools-list {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+            color: #1E2F3E;
+        }
+        .tools-list ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+        .footer-note {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #8BA0B8;
+            margin-top: 1.5rem;
+        }
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 16px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            margin-top: 0.5rem;
+            resize: vertical;
+            font-size: 0.9rem;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #1A6B5A;
+        }
+        .hidden {
+            display: none;
+        }
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1A6B5A;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            z-index: 1000;
             animation: fadeInUp 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .toast-message.error {
+            background: #B33A3A;
         }
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        .badge-btn {
+            background: linear-gradient(135deg, #E8A735 0%, #D4951E 100%);
+            color: #2E3A2A;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.8rem 1.8rem;
+            margin-top: 1rem;
+        }
+        
+        /* Modal styles */
+        .name-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 32px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-content h2 {
+            color: #1A6B5A;
+            margin-bottom: 0.5rem;
+        }
+        .modal-content p {
+            color: #4F6F8F;
+            margin-bottom: 1.5rem;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+            border: 2px solid #E2E9F2;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        .modal-content input:focus {
+            outline: none;
+            border-color: #1A6B5A;
+        }
+        .start-btn {
+            background: #1A6B5A;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        .start-btn:hover {
+            background: #0e4d40;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ========== كود التحقق ========== -->
-    <script>
-        const userLang = localStorage.getItem('userLanguage') || 'en';
-        const messages = {
-            en: { alert: 'Sorry, please register and verify your email first to access the course.', redirect: 'register.html' },
-            ar: { alert: 'عذراً، يرجى التسجيل وتأكيد بريدك الإلكتروني أولاً للوصول إلى الكورس.', redirect: 'register.html' }
-        };
-        const t = messages[userLang] || messages.en;
-        if (sessionStorage.getItem('isVerifiedUser') !== 'true') {
-            alert(t.alert);
-            window.location.href = t.redirect;
-        }
-    </script>
-    <!-- ================================= -->
-<div class="course-card" id="app">
+
+<!-- MODAL FOR NAME INPUT - Always visible at start -->
+<div id="nameModal" class="name-modal" style="display: flex;">
+    <div class="modal-content">
+        <div style="font-size: 3rem;">👋🏅</div>
+        <h2>Welcome to the Assessment</h2>
+        <p>Please enter your details below to get your digital badge.</p>
+        <input type="text" id="userNameInput" placeholder="Your full name *" required>
+        <input type="email" id="userEmailInput" placeholder="Your email address *" required>
+        <input type="text" id="userPositionInput" placeholder="Your position / title (optional)">
+        <button id="startAssessmentBtn" class="start-btn">📝 Start Assessment →</button>
+    </div>
+</div>
+
+<div class="course-card">
     <div class="header-tag">
         <span>THE RESILIENCE TOOLKIT</span>
-        <span class="user-badge" id="userBadge" style="font-size:0.7rem;background:#E8F5E9;padding:0.2rem 0.6rem;border-radius:20px;color:#1A6B5A;">👤 Loading...</span>
+        <span class="user-badge" id="userBadge">👤 Loading...</span>
     </div>
-    <h1>The Resilience Toolkit<br>for Conflict-Zone Leaders</h1>
-    <div class="subhead">Adaptive Leadership in Fragile Contexts — Frameworks for the 7 AM crisis</div>
-    <div class="presenter">Presented by: Malak Abdo</div>
-    <div class="duration-badge">20-30 minutes • self-paced</div>
-
+    <h1>📋 Post-Course Assessment</h1>
     <div class="assessment-header">
-        <h2>Pre-Course Self-Assessment</h2>
-        <div class="tagline">Are You Ready for This Course?</div>
-        <div class="description"><strong>Time to complete:</strong> 3 minutes &nbsp;|&nbsp; <strong>Purpose:</strong> This assessment helps determine if this course is right for you.</div>
-        <div class="description"><strong>Instructions:</strong> Answer each question honestly. There are no wrong answers.</div>
-        <div class="meta"><span>📊 Progress: <span id="headerProgress">0</span>% complete</span></div>
+        <p style="margin-bottom: 0.5rem;"><strong>⏱️ 3 minutes · No wrong answers</strong></p>
+        <p>Thank you for completing The Resilience Toolkit. Please answer these 6 questions honestly.</p>
     </div>
 
     <div class="progress-area">
-        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+        <div class="progress-bar-fill" id="progressFill"></div>
     </div>
     <div class="progress-stats">
-        <span id="progressFraction">0/5 questions</span>
-        <span id="progressPercentLabel">0% complete</span>
+        <span id="progressText">0/6 questions</span>
     </div>
 
     <div id="questionsContainer"></div>
-    <div id="resultsArea" class="hidden"></div>
-    <div id="welcomeBlock" class="hidden"></div>
 
-    <div class="nav-buttons" id="navButtons">
-        <button id="prevBtn" class="secondary" disabled>← Back</button>
+    <div class="nav-buttons">
+        <button id="prevBtn" class="secondary" disabled>← Previous</button>
         <button id="nextBtn" disabled>Next →</button>
     </div>
-    
-    <div class="footer-note">Your responses help us personalize your learning experience.</div>
-    <div class="reset-link"><a id="resetDataLink">↺ Reset Assessment</a></div>
+
+    <div id="resultsArea" class="hidden"></div>
+    <div id="sendSection" class="hidden" style="text-align: center; margin-top: 1.5rem;">
+        <button id="sendResultsBtn" class="badge-btn">🎓 Get Your Completion Badge</button>
+        <div id="sendFeedback" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+    </div>
+
+    <div class="footer-note">Your feedback helps us improve this course.</div>
 </div>
 
 <script>
 // ============================================
-// LANGUAGE SUFFIX FOR LOCALSTORAGE
+// GOOGLE SHEETS WEB APP URL
 // ============================================
-const storageSuffix = '_en';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz50ZDvr2jPBWa3BiQXMra0zye7sbvOI6X26O9hMrI8qWHBhSLoJXfO9_tfGqXDpXgSTA/exec';
 
 // ============================================
-// GOOGLE SHEETS WEB APP URL - Same as Module 1
+// MODAL AND USER DATA HANDLING
 // ============================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOkndHS0Jhjto-GeWGmgBzGmMsA_HnwrGQLV4LOOCCp0kWpfODdTQrgZGb5zQxhB9DnA/exec';
 
-// ============================================
-// QUESTION TEXT CONSTANTS - For column headers
-// ============================================
-const QUESTION_TEXTS = {
-    1: "In the last 30 days, how often have you faced a crisis that you did not have SOPs for?",
-    2: "When a sudden crisis hits, what is your typical first reaction?",
-    3: "When was the last time you set a 'learning intention' instead of a performance goal?",
-    4: "How confident are you in shifting your mindset in the middle of a crisis? (1-5 scale)",
-    5: "Which of the following best describes your current leadership context? (Select all that apply)"
-};
+function saveUserDataToLocalStorage(name, email, position) {
+    localStorage.setItem('course_user_name', name);
+    localStorage.setItem('course_user_email', email);
+    localStorage.setItem('course_user_position', position);
+}
 
-// ============================================
-// IMPROVED getUserData() - Same as Module 1
-// ============================================
+function getUserDataFromLocalStorage() {
+    let name = localStorage.getItem('course_user_name') || '';
+    let email = localStorage.getItem('course_user_email') || '';
+    let position = localStorage.getItem('course_user_position') || '';
+    return { name, email, position };
+}
+
+function hideModal() {
+    const modal = document.getElementById('nameModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function updateUserBadge(name) {
+    const userBadge = document.getElementById('userBadge');
+    if (userBadge && name && name !== 'Learner') {
+        userBadge.innerText = `👤 ${name}`;
+    }
+}
+
+// Setup modal button - THIS IS THE KEY FUNCTION
+function setupModalButton() {
+    const startBtn = document.getElementById('startAssessmentBtn');
+    if (startBtn) {
+        startBtn.addEventListener('click', function() {
+            const name = document.getElementById('userNameInput').value.trim();
+            const email = document.getElementById('userEmailInput').value.trim();
+            const position = document.getElementById('userPositionInput').value.trim();
+            
+            if (!name || !email) {
+                alert('Please enter your name and email address.');
+                return;
+            }
+            
+            saveUserDataToLocalStorage(name, email, position);
+            updateUserBadge(name);
+            hideModal();
+            
+            // Start the assessment
+            renderQuestion();
+            updateProgress();
+        });
+    }
+}
+
 function getUserData() {
-    let name = 'Guest';
-    let email = 'guest@example.com';
-    let position = 'Not specified';
-    let country = 'Not specified';
-    
-    console.log('🔍 Searching for user data in pre-assessment-en.html...');
-    
-    try {
-        let currentUser = localStorage.getItem('currentUser');
-        if (currentUser) {
-            let user = JSON.parse(currentUser);
-            if (user && user.name && user.name !== 'Guest' && user.name.trim() !== '') {
-                name = user.name.trim();
-                email = (user.email || '').trim() || 'guest@example.com';
-                position = (user.position || '').trim() || 'Not specified';
-                country = (user.country || '').trim() || 'Not specified';
-                console.log('✅ Found from currentUser (no suffix):', name);
-                
-                localStorage.setItem('currentUser' + storageSuffix, JSON.stringify(user));
-                localStorage.setItem('course_user_name' + storageSuffix, name);
-                localStorage.setItem('course_user_email' + storageSuffix, email);
-                localStorage.setItem('course_user_position' + storageSuffix, position);
-                localStorage.setItem('course_user_country' + storageSuffix, country);
-                
-                return { name, email, position, country };
-            }
-        }
-    } catch(e) { console.error('Error parsing currentUser:', e); }
-    
-    try {
-        let users = JSON.parse(localStorage.getItem('users') || '[]');
-        if (Array.isArray(users) && users.length > 0) {
-            let lastUser = users[users.length - 1];
-            if (lastUser && lastUser.name && lastUser.name !== 'Guest' && lastUser.name.trim() !== '') {
-                name = lastUser.name.trim();
-                email = (lastUser.email || '').trim() || 'guest@example.com';
-                position = (lastUser.position || '').trim() || 'Not specified';
-                country = (lastUser.country || '').trim() || 'Not specified';
-                console.log('✅ Found from users array (no suffix):', name);
-                
-                localStorage.setItem('currentUser' + storageSuffix, JSON.stringify(lastUser));
-                localStorage.setItem('course_user_name' + storageSuffix, name);
-                localStorage.setItem('course_user_email' + storageSuffix, email);
-                localStorage.setItem('course_user_position' + storageSuffix, position);
-                localStorage.setItem('course_user_country' + storageSuffix, country);
-                
-                return { name, email, position, country };
-            }
-        }
-    } catch(e) { console.error('Error parsing users:', e); }
-    
-    let n = localStorage.getItem('course_user_name');
-    if (n && n !== 'null' && n !== 'undefined' && n !== 'Guest' && n.trim() !== '') {
-        name = n.trim();
-        email = (localStorage.getItem('course_user_email') || 'guest@example.com').trim();
-        position = (localStorage.getItem('course_user_position') || 'Not specified').trim();
-        country = (localStorage.getItem('course_user_country') || 'Not specified').trim();
-        console.log('✅ Found from individual fields (no suffix):', name);
-        
-        localStorage.setItem('course_user_name' + storageSuffix, name);
-        localStorage.setItem('course_user_email' + storageSuffix, email);
-        localStorage.setItem('course_user_position' + storageSuffix, position);
-        localStorage.setItem('course_user_country' + storageSuffix, country);
-        
-        return { name, email, position, country };
-    }
-    
-    let user = localStorage.getItem('course_user');
-    if (user) {
-        try { 
-            let p = JSON.parse(user); 
-            if (p && p.name && p.name !== 'Guest' && p.name.trim() !== '') {
-                name = p.name.trim();
-                email = (p.email || 'guest@example.com').trim();
-                position = (p.position || 'Not specified').trim();
-                country = (p.country || 'Not specified').trim();
-                console.log('✅ Found from course_user (no suffix):', name);
-                
-                localStorage.setItem('course_user_name' + storageSuffix, name);
-                localStorage.setItem('course_user_email' + storageSuffix, email);
-                localStorage.setItem('course_user_position' + storageSuffix, position);
-                localStorage.setItem('course_user_country' + storageSuffix, country);
-                
-                return { name, email, position, country };
-            }
-        } catch(e) {}
-    }
-    
-    let users = localStorage.getItem('resilience_users');
-    if (users) {
-        try { 
-            let p = JSON.parse(users); 
-            if (Array.isArray(p) && p.length > 0) {
-                for (let i = p.length - 1; i >= 0; i--) {
-                    if (p[i] && p[i].name && p[i].name !== 'Guest' && p[i].name.trim() !== '') {
-                        name = p[i].name.trim();
-                        email = (p[i].email || 'guest@example.com').trim();
-                        position = (p[i].position || 'Not specified').trim();
-                        country = (p[i].country || 'Not specified').trim();
-                        console.log('✅ Found from resilience_users (no suffix):', name);
-                        
-                        localStorage.setItem('course_user_name' + storageSuffix, name);
-                        localStorage.setItem('course_user_email' + storageSuffix, email);
-                        localStorage.setItem('course_user_position' + storageSuffix, position);
-                        localStorage.setItem('course_user_country' + storageSuffix, country);
-                        
-                        return { name, email, position, country };
-                    }
-                }
-            }
-        } catch(e) {}
-    }
-    
-    n = localStorage.getItem('course_user_name' + storageSuffix);
-    if (n && n !== 'null' && n !== 'undefined' && n !== 'Guest' && n.trim() !== '') {
-        name = n.trim();
-        email = (localStorage.getItem('course_user_email' + storageSuffix) || 'guest@example.com').trim();
-        position = (localStorage.getItem('course_user_position' + storageSuffix) || 'Not specified').trim();
-        country = (localStorage.getItem('course_user_country' + storageSuffix) || 'Not specified').trim();
-        console.log('✅ Found from individual fields (with suffix):', name);
-        return { name, email, position, country };
-    }
-    
-    try {
-        let currentUser = localStorage.getItem('currentUser' + storageSuffix);
-        if (currentUser) {
-            let user = JSON.parse(currentUser);
-            if (user && user.name && user.name !== 'Guest' && user.name.trim() !== '') {
-                name = user.name.trim();
-                email = (user.email || '').trim() || 'guest@example.com';
-                position = (user.position || '').trim() || 'Not specified';
-                country = (user.country || '').trim() || 'Not specified';
-                console.log('✅ Found from currentUser (with suffix):', name);
-                return { name, email, position, country };
-            }
-        }
-    } catch(e) {}
-    
-    console.log('⚠️ No user data found, using Guest');
-    return { name: 'Guest', email: 'guest@example.com', position: 'Not specified', country: 'Not specified' };
+    const user = getUserDataFromLocalStorage();
+    return { 
+        name: user.name || 'Learner', 
+        email: user.email || 'Not provided', 
+        position: user.position || 'Not specified' 
+    };
 }
 
-// Display user name in badge
 const currentUser = getUserData();
-const userBadge = document.getElementById('userBadge');
-if (userBadge) {
-    if (currentUser.name !== 'Guest') {
-        userBadge.innerText = `👤 ${currentUser.name}`;
-    } else {
-        userBadge.innerText = `👤 Learner`;
-    }
-}
-console.log('👤 User loaded:', currentUser.name);
 
 function showToast(message, isError = false) {
-    const existing = document.querySelector('.toast-notification');
+    const existing = document.querySelector('.toast-message');
     if (existing) existing.remove();
     const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.style.background = isError ? '#C0392B' : '#1A6B5A';
+    toast.className = 'toast-message' + (isError ? ' error' : '');
     toast.textContent = message;
     document.body.appendChild(toast);
-    setTimeout(() => { if (toast) toast.remove(); }, 3000);
+    setTimeout(() => toast.remove(), 3000);
 }
 
-// ============================================
-// SEND DATA - ONLY called when pressing Next
-// ============================================
-function sendPreAssessmentData(action) {
+async function sendToGoogleSheet(answersData) {
     const user = getUserData();
-    const score = calculatePreScore(answers);
-    const category = getCategory(score);
     
-    const payload = {
-        module: 'Pre-Assessment',
-        action: action, // 'partial' or 'completed'
+    var payload = {
+        module: 'Post Assessment',
+        action: 'completed',
         language: 'en',
         userName: user.name,
         userEmail: user.email,
         userPosition: user.position,
-        userCountry: user.country,
         timestamp: new Date().toISOString(),
-        answers: {
-            score: score,
-            category: category,
-            q1_answer: getQ1(answers[1]),
-            q2_answer: getQ2(answers[2]),
-            q3_answer: getQ3(answers[3]),
-            q4_answer: answers[4] || '',
-            q5_answer: answers[5] ? answers[5].join(', ') : ''
-        },
-        questionTexts: {
-            q1_text: QUESTION_TEXTS[1],
-            q2_text: QUESTION_TEXTS[2],
-            q3_text: QUESTION_TEXTS[3],
-            q4_text: QUESTION_TEXTS[4],
-            q5_text: QUESTION_TEXTS[5]
-        }
+        answers: answersData
     };
     
-    console.log('📤 Sending Pre-Assessment data (action: ' + action + '):', payload);
+    console.log('📤 Sending payload:', payload);
     
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('✅ Pre-assessment data sent successfully:', data);
-        if (action === 'completed') {
-            showToast('✅ Assessment results saved!');
-        }
-    })
-    .catch(error => {
-        console.warn('⚠️ Error sending data:', error);
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', GOOGLE_SCRIPT_URL, true);
-        xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
-        xhr.send(JSON.stringify(payload));
-    });
-}
-
-function getQ1(v) { 
-    const m = {A:'Never', B:'Once or twice', C:'Weekly', D:'Daily'}; 
-    return m[v] || ''; 
-}
-
-function getQ2(v) { 
-    const m = {
-        A:'Wait for instructions from HQ', 
-        B:'Try to solve it alone', 
-        C:'Gather my team and ask a question', 
-        D:'Freeze or feel overwhelmed'
-    }; 
-    return m[v] || ''; 
-}
-
-function getQ3(v) { 
-    const m = {
-        A:'Never', 
-        B:'More than 6 months ago', 
-        C:'Within the last month', 
-        D:'Within the last week'
-    }; 
-    return m[v] || ''; 
-}
-
-function calculatePreScore(a) {
-    let s = 0;
-    if (a[1]==='C'||a[1]==='D') s+=2; else if (a[1]==='B') s+=1;
-    if (a[2]!=='C') s+=1;
-    if (a[3]==='A'||a[3]==='B') s+=1;
-    if (a[4]<=2) s+=2; else if (a[4]===3) s+=1;
-    if (a[5]&&a[5].includes('conflict')) s+=2;
-    if (a[5]&&a[5].includes('team')) s+=1;
-    if (a[5]&&a[5].includes('stable')) s-=1;
-    return Math.max(0, Math.min(8, s));
-}
-
-function getCategory(s) { 
-    return s>=6 ? 'ESSENTIAL' : s>=3 ? 'VALUABLE' : 'OPTIONAL'; 
-}
-
-// ============================================
-// QUESTIONS DATA
-// ============================================
-const questions = [
-    { 
-        id: 1, 
-        text: QUESTION_TEXTS[1],
-        type: "single", 
-        options: [
-            { value: "A", label: "Never", sub: "I have a protocol for almost everything." },
-            { value: "B", label: "Once or twice", sub: "Most crises are familiar." },
-            { value: "C", label: "Weekly", sub: "New surprises happen regularly." },
-            { value: "D", label: "Daily", sub: "Every morning brings something new." }
-        ] 
-    },
-    { 
-        id: 2, 
-        text: QUESTION_TEXTS[2],
-        type: "single", 
-        options: [
-            { value: "A", label: "Wait for instructions from HQ", sub: "I need approval before acting." },
-            { value: "B", label: "Try to solve it alone", sub: "I take full responsibility." },
-            { value: "C", label: "Gather my team and ask a question", sub: "e.g., 'What works without fuel?'" },
-            { value: "D", label: "Freeze or feel overwhelmed", sub: "I need time to process." }
-        ] 
-    },
-    { 
-        id: 3, 
-        text: QUESTION_TEXTS[3],
-        type: "single", 
-        options: [
-            { value: "A", label: "Never", sub: "I only set performance goals." },
-            { value: "B", label: "More than 6 months ago", sub: "I used to, but not recently." },
-            { value: "C", label: "Within the last month", sub: "I try to balance both." },
-            { value: "D", label: "Within the last week", sub: "I regularly use learning intentions." }
-        ] 
-    },
-    { 
-        id: 4, 
-        text: QUESTION_TEXTS[4],
-        type: "scale", 
-        scaleRange: [1,2,3,4,5] 
-    },
-    { 
-        id: 5, 
-        text: QUESTION_TEXTS[5],
-        type: "multi", 
-        options: [
-            { value: "conflict", label: "Active conflict zone" },
-            { value: "team", label: "I manage a team of 3+ people" },
-            { value: "experience", label: "2+ years field experience" },
-            { value: "autonomy", label: "I make decisions without HQ approval" },
-            { value: "stable", label: "Stable environment with reliable resources" }
-        ] 
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json();
+        console.log('✅ Response:', result);
+        return result.success === true;
+    } catch (error) {
+        console.log('⚠️ Error:', error);
+        return true;
     }
+}
+
+const assessmentQuestions = [
+    { id: 1, text: "Do you feel confident you could use the S.A.F.E. framework in a future crisis?", type: "scale", min: 1, max: 5, labels: ["Not confident at all", "Slightly confident", "Moderately confident", "Very confident", "Extremely confident"] },
+    { id: 2, text: "Do you believe your first reaction to a crisis will change after this course?", type: "scale", min: 1, max: 5, labels: ["Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"] },
+    { id: 3, text: "Compared to before this course, how confident are you in leading your team through an unexpected crisis?", type: "scale", min: 1, max: 5, labels: ["Much less confident", "Slightly less confident", "No change", "Slightly more confident", "Much more confident"] },
+    { id: 4, text: "What is the SINGLE most valuable thing you learned from this course?", type: "text", placeholder: "Example: The S.A.F.E. framework will help me pause before reacting..." },
+    { id: 5, text: "How likely are you to use at least one tool from this course in the next 30 days?", type: "scale", min: 1, max: 5, labels: ["Very unlikely", "Unlikely", "Neutral", "Likely", "Very likely"] },
+    { id: 6, text: "Overall, how would you rate this course?", type: "scale", min: 1, max: 5, labels: ["Poor", "Fair", "Good", "Very good", "Excellent"] }
 ];
 
-let answers = { 1: null, 2: null, 3: null, 4: null, 5: [] };
+let answers = {};
 let currentIndex = 0;
-let assessmentCompleted = false;
 
-const container = document.getElementById("questionsContainer");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const navButtons = document.getElementById("navButtons");
-const progressFill = document.getElementById("progressFill");
-const progressFractionSpan = document.getElementById("progressFraction");
-const progressPercentSpan = document.getElementById("progressPercentLabel");
-const resultsArea = document.getElementById("resultsArea");
-const welcomeBlock = document.getElementById("welcomeBlock");
-const headerProgressSpan = document.getElementById("headerProgress");
+for (let i = 1; i <= assessmentQuestions.length; i++) {
+    const q = assessmentQuestions[i-1];
+    answers[i] = q.type === 'text' ? '' : null;
+}
 
-function updateProgressBar() {
-    let c = 0;
-    for (let i=1;i<=5;i++) { 
-        if (i===5) { 
-            if (answers[5]&&answers[5].length>0) c++; 
-        } else { 
-            if (answers[i]!==null&&answers[i]!=='') c++; 
-        } 
+const container = document.getElementById('questionsContainer');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const resultsArea = document.getElementById('resultsArea');
+const sendSection = document.getElementById('sendSection');
+
+function updateProgress() {
+    let answered = 0;
+    for (let i = 1; i <= assessmentQuestions.length; i++) {
+        const q = assessmentQuestions[i-1];
+        if (q.type === 'text') {
+            if (answers[i] && answers[i].trim() !== '') answered++;
+        } else {
+            if (answers[i] !== null && answers[i] !== '') answered++;
+        }
     }
-    const p = Math.round((c/5)*100);
-    progressFill.style.width = p+"%";
-    progressFractionSpan.innerText = c+"/5 questions";
-    progressPercentSpan.innerText = p+"% complete";
-    if (headerProgressSpan) headerProgressSpan.innerText = p;
-    updateNextButtonState();
-}
-
-function updateNextButtonState() {
-    if (assessmentCompleted) { 
-        nextBtn.disabled=true; 
-        return; 
+    const percent = (answered / assessmentQuestions.length) * 100;
+    progressFill.style.width = percent + '%';
+    progressText.innerText = answered + '/' + assessmentQuestions.length + ' questions answered';
+    
+    const currentQ = assessmentQuestions[currentIndex];
+    let currentAnswered = false;
+    if (currentQ.type === 'text') {
+        currentAnswered = (answers[currentIndex+1] && answers[currentIndex+1].trim() !== '');
+    } else {
+        currentAnswered = (answers[currentIndex+1] !== null && answers[currentIndex+1] !== '');
     }
-    const q = questions[currentIndex];
-    nextBtn.disabled = q.type==='multi' ? !(answers[5]&&answers[5].length>0) : !(answers[q.id]!==null&&answers[q.id]!=='');
+    nextBtn.disabled = !currentAnswered;
 }
 
-function persistAnswers() { 
-    localStorage.setItem('pre_assessment_answers' + storageSuffix, JSON.stringify(answers)); 
-}
-
-function loadStoredAnswers() {
-    const s = localStorage.getItem('pre_assessment_answers' + storageSuffix);
-    if (s) { 
-        try { 
-            const p = JSON.parse(s); 
-            for (let k in p) { 
-                if (answers.hasOwnProperty(k)) answers[k]=p[k]; 
-            } 
-        } catch(e) {} 
-    }
-    updateProgressBar();
-}
-
-function renderCurrentQuestion() {
-    const q = questions[currentIndex];
+function renderQuestion() {
+    const q = assessmentQuestions[currentIndex];
     if (!q) return;
-    let html = `<div class="question"><div style="font-weight:700;margin-bottom:0.8rem;">Question ${q.id} of 5</div><div style="margin-bottom:1rem;">${q.text}</div><div class="options">`;
-
-    if (q.type==='single') {
-        q.options.forEach(opt => {
-            const sel = (answers[q.id]===opt.value);
-            html += `<div class="option ${sel?'selected':''}" data-value="${opt.value}">
-                <div class="option-letter">${opt.value}</div>
-                <div><div class="option-text">${opt.label}</div><div class="option-sub">${opt.sub||''}</div></div></div>`;
-        });
-    } else if (q.type==='scale') {
-        const labels = ["1 - Not confident","2 - Slightly confident","3 - Somewhat confident","4 - Confident","5 - Very confident"];
-        html += '<div class="scale-row">';
-        q.scaleRange.forEach((n,i) => { 
-            html += `<div class="scale-item ${answers[q.id]===n?'selected':''}" data-scale="${n}">${labels[i]}</div>`; 
-        });
-        html += '</div>';
-    } else if (q.type==='multi') {
-        q.options.forEach(opt => {
-            html += `<div class="check-option ${(answers[5]||[]).includes(opt.value)?'selected':''}" data-multi="${opt.value}">${opt.label}</div>`;
-        });
-        html += '<div style="font-size:0.75rem;color:#6C86A0;margin-top:0.6rem;">Select all that apply</div>';
+    
+    let html = `<div class="question"><p><strong>Question ${currentIndex+1} of ${assessmentQuestions.length}</strong></p><p>${q.text}</p>`;
+    
+    if (q.type === 'scale') {
+        html += `<div class="scale-row">`;
+        for (let i = q.min; i <= q.max; i++) {
+            const isSelected = (answers[currentIndex+1] === i);
+            html += `<div class="scale-item ${isSelected ? 'selected' : ''}" data-value="${i}"><strong>${i}</strong><br><span style="font-size:0.7rem;">${q.labels[i-1]}</span></div>`;
+        }
+        html += `</div>`;
+    } else if (q.type === 'text') {
+        html += `<textarea id="textAnswer" rows="4" placeholder="${q.placeholder}">${answers[currentIndex+1] || ''}</textarea>`;
     }
-    html += '</div></div>';
+    html += `</div>`;
     container.innerHTML = html;
-    attachEvents();
-    updateNextButtonState();
-}
-
-function attachEvents() {
-    const q = questions[currentIndex];
-    if (q.type==='single') {
-        document.querySelectorAll('.option').forEach(opt => {
-            opt.addEventListener('click', () => {
-                document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
-                opt.classList.add('selected');
-                answers[q.id]=opt.getAttribute('data-value');
-                persistAnswers(); 
-                updateProgressBar();
-                // ❌ NO DATA SENT HERE - Only on Next button
-            });
-        });
-    } else if (q.type==='scale') {
+    
+    if (q.type === 'scale') {
         document.querySelectorAll('.scale-item').forEach(item => {
             item.addEventListener('click', () => {
-                document.querySelectorAll('.scale-item').forEach(i=>i.classList.remove('selected'));
+                const val = parseInt(item.getAttribute('data-value'));
+                document.querySelectorAll('.scale-item').forEach(i => i.classList.remove('selected'));
                 item.classList.add('selected');
-                answers[q.id]=parseInt(item.getAttribute('data-scale'));
-                persistAnswers(); 
-                updateProgressBar();
-                // ❌ NO DATA SENT HERE - Only on Next button
+                answers[currentIndex+1] = val;
+                updateProgress();
             });
         });
-    } else if (q.type==='multi') {
-        document.querySelectorAll('.check-option').forEach(opt => {
-            opt.addEventListener('click', () => {
-                const v = opt.getAttribute('data-multi');
-                const idx = answers[5].indexOf(v);
-                if (idx===-1) { 
-                    answers[5].push(v); 
-                    opt.classList.add('selected'); 
-                }
-                else { 
-                    answers[5].splice(idx,1); 
-                    opt.classList.remove('selected'); 
-                }
-                persistAnswers(); 
-                updateProgressBar();
-                // ❌ NO DATA SENT HERE - Only on Next button
-            });
+    } else if (q.type === 'text') {
+        const textarea = document.getElementById('textAnswer');
+        textarea.addEventListener('input', () => {
+            answers[currentIndex+1] = textarea.value;
+            updateProgress();
         });
     }
+}
+
+function calculateCompletionScore() {
+    let answered = 0;
+    for (let i = 1; i <= assessmentQuestions.length; i++) {
+        const q = assessmentQuestions[i-1];
+        if (q.type === 'text') {
+            if (answers[i] && answers[i].trim() !== '') answered++;
+        } else {
+            if (answers[i] !== null && answers[i] !== '') answered++;
+        }
+    }
+    return Math.round((answered / assessmentQuestions.length) * 100);
+}
+
+function showResults() {
+    const completionScore = calculateCompletionScore();
+    const userName = getUserData().name;
+    
+    let resultsHtml = `<div class="results-box"><div class="congrats-message"><h3>🎉 Thank you, ${userName}! 🎉</h3><p>You have successfully completed The Resilience Toolkit post-course assessment.</p></div><div class="tools-list"><h4>🧰 Your Resilience Toolkit is now ready</h4><ul><li><strong>🔍 The S.A.F.E. Framework</strong> — Stop & Breathe, Assess Reality, Find Smallest Action, Execute & Evaluate</li><li><strong>🔄 Mindset Shifting</strong> — Moving from Victim → Agent, Scarcity → Abundance, Panic → Curious</li><li><strong>🎯 Learning Intentions vs Performance Goals</strong> — Learn the terrain first</li><li><strong>⚙️ Executive Habits</strong> — The Habit Loop (Cue → Routine → Reward)</li><li><strong>⏰ The 7 AM Protocol</strong> — Pre-authorized scripts for crisis moments</li></ul></div><div><strong>✅ Assessment complete:</strong> ${completionScore}%</div>`;
+    
+    if (answers[4] && answers[4].trim()) {
+        resultsHtml += `<div><strong>💡 Most valuable thing you learned:</strong><br>"${answers[4]}"</div>`;
+    }
+    resultsHtml += `</div>`;
+    resultsArea.innerHTML = resultsHtml;
+    resultsArea.classList.remove('hidden');
+    container.classList.add('hidden');
+    prevBtn.classList.add('hidden');
+    nextBtn.classList.add('hidden');
+    sendSection.classList.remove('hidden');
+}
+
+async function sendResults() {
+    const sendBtn = document.getElementById('sendResultsBtn');
+    const feedbackDiv = document.getElementById('sendFeedback');
+    
+    let allAnswered = true;
+    for (let i = 1; i <= assessmentQuestions.length; i++) {
+        const q = assessmentQuestions[i-1];
+        if (q.type === 'text') {
+            if (!answers[i] || answers[i].trim() === '') allAnswered = false;
+        } else {
+            if (answers[i] === null || answers[i] === '') allAnswered = false;
+        }
+    }
+    
+    if (!allAnswered) {
+        showToast('⚠️ Please answer all questions before submitting.', true);
+        return;
+    }
+    
+    sendBtn.disabled = true;
+    sendBtn.innerText = '🎓 Saving...';
+    feedbackDiv.innerHTML = '⏳ Sending your assessment...';
+    
+    const completionScore = calculateCompletionScore();
+    const answersData = {
+        q1_confidence_safe: answers[1] || '',
+        q2_reaction_change: answers[2] || '',
+        q3_confidence_team: answers[3] || '',
+        q4_most_valuable: answers[4] || '',
+        q5_likelihood_use: answers[5] || '',
+        q6_overall_rating: answers[6] || '',
+        completionScore: completionScore
+    };
+    
+    await sendToGoogleSheet(answersData);
+    localStorage.setItem('post_assessment_completed', 'true');
+    localStorage.setItem('course_completed', 'true');
+    window.location.href = 'badge.html';
 }
 
 function handleNext() {
-    const q = questions[currentIndex];
-    const answered = q.type==='multi' ? (answers[5]&&answers[5].length>0) : (answers[q.id]!==null&&answers[q.id]!=='');
-    if (!answered) { 
-        showToast("Please answer the question before moving forward.", true); 
-        return; 
-    }
-    
-    // ✅ SEND DATA ONLY WHEN PRESSING NEXT
-    if (currentIndex === questions.length - 1) {
-        // Last question - send as 'completed'
-        sendPreAssessmentData('completed');
-        finishAssessment();
+    const currentQ = assessmentQuestions[currentIndex];
+    let currentAnswered = false;
+    if (currentQ.type === 'text') {
+        currentAnswered = (answers[currentIndex+1] && answers[currentIndex+1].trim() !== '');
     } else {
-        // Not last question - send as 'partial'
-        sendPreAssessmentData('partial');
-        currentIndex++; 
-        renderCurrentQuestion(); 
-        updateNavButtons(); 
-        updateProgressBar();
+        currentAnswered = (answers[currentIndex+1] !== null && answers[currentIndex+1] !== '');
     }
-}
-
-function handlePrev() { 
-    if (currentIndex>0) { 
-        currentIndex--; 
-        renderCurrentQuestion(); 
-        updateNavButtons(); 
-    } 
-}
-
-function updateNavButtons() {
-    prevBtn.disabled = (currentIndex===0);
-    if (!assessmentCompleted) {
-        const q = questions[currentIndex];
-        const answered = q.type==='multi' ? (answers[5]&&answers[5].length>0) : (answers[q.id]!==null&&answers[q.id]!=='');
-        nextBtn.disabled = !answered;
-        nextBtn.innerText = (currentIndex===questions.length-1) ? "See my results →" : "Next →";
+    
+    if (!currentAnswered) {
+        showToast('⚠️ Please answer the current question.', true);
+        return;
     }
-}
-
-// ============================================
-// FINISH ASSESSMENT - Shows results
-// ============================================
-function finishAssessment() {
-    const score = calculatePreScore(answers);
-    const category = getCategory(score);
     
-    localStorage.setItem('pre_assessment_score' + storageSuffix, score);
-    localStorage.setItem('pre_assessment_category' + storageSuffix, category);
-    
-    container.innerHTML = '';
-    navButtons.classList.add('hidden');
-    
-    let resultClass, badgeIcon, badgeText, titleText, quoteText, callText;
-    
-    if (category==='ESSENTIAL') {
-        resultClass='results-essential';
-        badgeIcon='🔥';
-        badgeText='ESSENTIAL · This course was written for you';
-        titleText='You are standing in the fire. And that is exactly where leaders are forged.';
-        quoteText='"The most resilient leaders are not those who never break. They are those who know how to rebuild — stronger, faster, and wiser."';
-        callText='Every tool you need is waiting for you in the next modules. Take them. Use them. Transform how you lead.';
-    } else if (category==='VALUABLE') {
-        resultClass='results-valuable';
-        badgeIcon='🌟';
-        badgeText='VALUABLE · Sharpen your adaptive instincts';
-        titleText='You already have the instincts. Now you need the system.';
-        quoteText='"Adaptive leadership is not about being perfect. It is about being able to deal with unpredictable change."';
-        callText='The difference between good and exceptional is not talent. It is the right frameworks applied at the right time.';
+    if (currentIndex < assessmentQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+        prevBtn.disabled = false;
     } else {
-        resultClass='results-optional';
-        badgeIcon='📚';
-        badgeText='OPTIONAL · Growth awaits you';
-        titleText='You are here because you want to grow. That is the most important step.';
-        quoteText='"Comfort is a dangerous place. Growth happens when we step into the unknown."';
-        callText='The best time to build resilience was yesterday. The second best time is now.';
-    }
-    
-    let resultHtml = `<div class="results-box ${resultClass}">
-                        <div class="badge-icon">${badgeIcon}</div>
-                        <div style="margin-bottom:0.8rem;">
-                            <span style="background:rgba(0,0,0,0.2);padding:4px 16px;border-radius:40px;font-weight:700;">${badgeText}</span>
-                        </div>
-                        <p style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">${titleText}</p>
-                        <div class="motivation-message"><em>${quoteText}</em></div>
-                        <p style="margin-top:1rem;font-size:0.95rem;">${callText}</p>
-                        <p style="margin-top:1rem;font-size:0.85rem;opacity:0.8;">Your Score: ${score}/8</p>
-                      </div>`;
-    
-    resultsArea.innerHTML = resultHtml;
-    resultsArea.classList.remove('hidden');
-    
-    let welcomeHtml = `<div class="welcome-message">
-                        <div style="font-size:2rem;">✨</div>
-                        <strong style="font-size:1.2rem;">You are ready to begin.</strong><br><br>
-                        <div class="action-buttons">
-                            <button id="goToModule1Btn" class="btn-module">📚 Start Introduction →</button>
-                            <button id="resetBtn" class="btn-reset">↺ Restart Assessment</button>
-                        </div>
-                      </div>`;
-    
-    welcomeBlock.innerHTML = welcomeHtml;
-    welcomeBlock.classList.remove('hidden');
-    
-    document.getElementById('goToModule1Btn').addEventListener('click',()=>{window.location.href='intro.html';});
-    document.getElementById('resetBtn').addEventListener('click',()=>{resetAssessment();});
-    
-    assessmentCompleted = true;
-    persistAnswers();
-}
-
-function resetAssessment() {
-    answers = {1:null,2:null,3:null,4:null,5:[]};
-    assessmentCompleted = false;
-    currentIndex = 0;
-    localStorage.removeItem('pre_assessment_answers' + storageSuffix);
-    resultsArea.classList.add('hidden');
-    welcomeBlock.classList.add('hidden');
-    container.classList.remove('hidden');
-    navButtons.classList.remove('hidden');
-    renderCurrentQuestion();
-    updateNavButtons();
-    updateProgressBar();
-}
-
-function resetCourse() {
-    if (confirm('Reset all assessment data? This cannot be undone.')) {
-        localStorage.removeItem('pre_assessment_answers' + storageSuffix);
-        localStorage.removeItem('pre_assessment_score' + storageSuffix);
-        localStorage.removeItem('pre_assessment_category' + storageSuffix);
-        location.reload();
+        showResults();
     }
 }
 
-function init() {
-    const user = getUserData();
-    console.log('👤 Detected user:', user);
-    
-    loadStoredAnswers();
-    renderCurrentQuestion();
-    updateNavButtons();
-    updateProgressBar();
-    prevBtn.addEventListener('click',handlePrev);
-    nextBtn.addEventListener('click',handleNext);
-    document.getElementById('resetDataLink').addEventListener('click',resetCourse);
+function handlePrev() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+        if (currentIndex === 0) prevBtn.disabled = true;
+    }
 }
 
-init();
+// Initialize page
+document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults);
+prevBtn.addEventListener('click', handlePrev);
+nextBtn.addEventListener('click', handleNext);
+
+// Setup modal button
+setupModalButton();
 </script>
 </body>
 </html>
+
+
