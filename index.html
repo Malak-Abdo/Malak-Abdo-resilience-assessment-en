@@ -543,7 +543,8 @@ function sendPostAssessmentData(action) {
             q6_text: QUESTION_TEXTS[6]
         },
         history: history,
-        totalChanges: totalChanges
+        totalChanges: totalChanges,
+        isComplete: (action === 'completed')  // ✅ FIX: This tells App Script to mark as Completed
     };
     
     console.log('📤 Sending Post Assessment data (action: ' + action + '):', payload);
@@ -719,11 +720,15 @@ function handleNext() {
         prevBtn.disabled = false;
         updateProgress();
     } else {
-        // Last question - send as 'completed' ONLY ONCE
+        // ✅ Last question - send as 'completed' ONLY ONCE
         if (!hasSentCompleted) {
             hasSentCompleted = true;
+            // ✅ Send completed data
             sendPostAssessmentData('completed');
+            // ✅ Store in localStorage
+            localStorage.setItem('post_assessment_completed' + storageSuffix, 'true');
         }
+        // ✅ Show results AFTER sending data
         showResults();
     }
 }
@@ -789,9 +794,10 @@ function init() {
     
     loadPreviousAnswers();
     
-    // Check if already completed
+    // ✅ Check if already completed
     if (localStorage.getItem('post_assessment_completed' + storageSuffix) === 'true') {
-        // Show results but don't allow re-submission
+        // ✅ Mark as completed so it doesn't send again
+        hasSentCompleted = true;
         showResults();
         const sendBtn = document.getElementById('sendResultsBtn');
         if (sendBtn) {
