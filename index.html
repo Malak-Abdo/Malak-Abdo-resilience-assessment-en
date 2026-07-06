@@ -807,7 +807,7 @@ function init() {
         return;
     }
     
-    // ✅ Show modal if no user data (this is the key fix)
+    // ✅ Show modal if no user data
     const modal = document.getElementById('nameModal');
     if (!user.name || user.name === 'Learner' || user.name === '') {
         modal.style.display = 'flex';
