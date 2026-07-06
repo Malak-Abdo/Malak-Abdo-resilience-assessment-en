@@ -301,7 +301,7 @@
 </head>
 <body>
 
-<!-- MODAL FOR NAME INPUT -->
+<!-- MODAL FOR NAME INPUT - Always visible at start -->
 <div id="nameModal" class="name-modal" style="display: flex;">
     <div class="modal-content">
         <div style="font-size: 3rem;">👋🏅</div>
@@ -464,12 +464,10 @@ function savePreviousAnswers() {
 function getChangesCount(questionId, currentValue) {
     const prevValue = previousAnswers[questionId];
     
-    // If no previous answer, return 0 (first time)
     if (prevValue === null || prevValue === undefined || prevValue === '') {
         return 0;
     }
     
-    // Compare strings for text answers
     if (String(prevValue) !== String(currentValue)) {
         return 1;
     }
@@ -489,7 +487,6 @@ function updatePreviousAnswers() {
 function sendPostAssessmentData(action) {
     const user = getUserData();
     
-    // ✅ Calculate changes by comparing with previous answers
     const q1Changes = getChangesCount(1, answers[1]);
     const q2Changes = getChangesCount(2, answers[2]);
     const q3Changes = getChangesCount(3, answers[3]);
@@ -497,7 +494,6 @@ function sendPostAssessmentData(action) {
     const q5Changes = getChangesCount(5, answers[5]);
     const q6Changes = getChangesCount(6, answers[6]);
     
-    // ✅ Build history with changes
     const history = {
         q1_history: answers[1] ? answers[1].toString() : '',
         q1_changes: q1Changes,
@@ -513,7 +509,6 @@ function sendPostAssessmentData(action) {
         q6_changes: q6Changes
     };
     
-    // ✅ Calculate total changes (sum of all individual changes)
     totalChanges = q1Changes + q2Changes + q3Changes + q4Changes + q5Changes + q6Changes;
     
     const completionScore = calculateCompletionScore();
@@ -710,7 +705,7 @@ function handleNext() {
         return;
     }
     
-    // ✅ Update previous answers before sending (this tracks changes)
+    // ✅ Update previous answers before sending
     updatePreviousAnswers();
     
     if (currentIndex < assessmentQuestions.length - 1) {
@@ -812,7 +807,7 @@ function init() {
         return;
     }
     
-    // ✅ Show modal if no user data
+    // ✅ Show modal if no user data (this is the key fix)
     const modal = document.getElementById('nameModal');
     if (!user.name || user.name === 'Learner' || user.name === '') {
         modal.style.display = 'flex';
