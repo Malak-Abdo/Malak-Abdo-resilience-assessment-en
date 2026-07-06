@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>The Resilience Toolkit · Post-Course Assessment</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background: #F4F7FC;
@@ -27,11 +23,7 @@
             padding: 1.8rem 1.5rem 2.2rem;
         }
         @media (max-width: 550px) {
-            .course-card {
-                margin: 0.8rem;
-                padding: 1.5rem 1.2rem;
-                border-radius: 28px;
-            }
+            .course-card { margin: 0.8rem; padding: 1.5rem 1.2rem; border-radius: 28px; }
         }
         .header-tag {
             font-size: 0.75rem;
@@ -238,7 +230,6 @@
             margin-top: 1rem;
         }
         
-        /* Modal styles */
         .name-modal {
             position: fixed;
             top: 0;
@@ -310,7 +301,7 @@
 </head>
 <body>
 
-<!-- MODAL FOR NAME INPUT - Always visible at start -->
+<!-- MODAL FOR NAME INPUT -->
 <div id="nameModal" class="name-modal" style="display: flex;">
     <div class="modal-content">
         <div style="font-size: 3rem;">👋🏅</div>
@@ -359,9 +350,26 @@
 
 <script>
 // ============================================
+// LANGUAGE SUFFIX FOR LOCALSTORAGE
+// ============================================
+const storageSuffix = '_en';
+
+// ============================================
 // GOOGLE SHEETS WEB APP URL
 // ============================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz50ZDvr2jPBWa3BiQXMra0zye7sbvOI6X26O9hMrI8qWHBhSLoJXfO9_tfGqXDpXgSTA/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVZprpnnFDCZ1kK-lkEH1zhy0l4AV1i_OeibfIXehm55TTRLttea1yI9GU21Zp3WJyfw/exec';
+
+// ============================================
+// QUESTION TEXT CONSTANTS - For column headers
+// ============================================
+const QUESTION_TEXTS = {
+    1: "Confident to use S.A.F.E. in future crisis? (1-5)",
+    2: "Believe first reaction to crisis will change? (1-5)",
+    3: "Confidence leading team through crisis vs before? (1-5)",
+    4: "SINGLE most valuable thing learned",
+    5: "Likely to use at least one tool in next 30 days? (1-5)",
+    6: "Overall course rating (1-5)"
+};
 
 // ============================================
 // MODAL AND USER DATA HANDLING
@@ -392,7 +400,6 @@ function updateUserBadge(name) {
     }
 }
 
-// Setup modal button - THIS IS THE KEY FUNCTION
 function setupModalButton() {
     const startBtn = document.getElementById('startAssessmentBtn');
     if (startBtn) {
@@ -410,7 +417,6 @@ function setupModalButton() {
             updateUserBadge(name);
             hideModal();
             
-            // Start the assessment
             renderQuestion();
             updateProgress();
         });
@@ -426,8 +432,6 @@ function getUserData() {
     };
 }
 
-const currentUser = getUserData();
-
 function showToast(message, isError = false) {
     const existing = document.querySelector('.toast-message');
     if (existing) existing.remove();
@@ -438,38 +442,133 @@ function showToast(message, isError = false) {
     setTimeout(() => toast.remove(), 3000);
 }
 
-async function sendToGoogleSheet(answersData) {
+// ============================================
+// TRACK ANSWER CHANGES - Store previous answers
+// ============================================
+let previousAnswers = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+let totalChanges = 0;
+
+function loadPreviousAnswers() {
+    const saved = localStorage.getItem('post_assessment_previous_answers' + storageSuffix);
+    if (saved) {
+        try {
+            previousAnswers = JSON.parse(saved);
+        } catch(e) {}
+    }
+}
+
+function savePreviousAnswers() {
+    localStorage.setItem('post_assessment_previous_answers' + storageSuffix, JSON.stringify(previousAnswers));
+}
+
+function getChangesCount(questionId, currentValue) {
+    const prevValue = previousAnswers[questionId];
+    
+    // If no previous answer, return 0 (first time)
+    if (prevValue === null || prevValue === undefined || prevValue === '') {
+        return 0;
+    }
+    
+    // Compare strings for text answers
+    if (String(prevValue) !== String(currentValue)) {
+        return 1;
+    }
+    return 0;
+}
+
+function updatePreviousAnswers() {
+    for (let i = 1; i <= 6; i++) {
+        previousAnswers[i] = answers[i];
+    }
+    savePreviousAnswers();
+}
+
+// ============================================
+// SEND DATA - Called on every Next click
+// ============================================
+function sendPostAssessmentData(action) {
     const user = getUserData();
     
-    var payload = {
+    // Build history data for each question with proper change tracking
+    const q1Changes = getChangesCount(1, answers[1]);
+    const q2Changes = getChangesCount(2, answers[2]);
+    const q3Changes = getChangesCount(3, answers[3]);
+    const q4Changes = getChangesCount(4, answers[4]);
+    const q5Changes = getChangesCount(5, answers[5]);
+    const q6Changes = getChangesCount(6, answers[6]);
+    
+    const history = {
+        q1_history: answers[1] ? answers[1].toString() : '',
+        q1_changes: q1Changes,
+        q2_history: answers[2] ? answers[2].toString() : '',
+        q2_changes: q2Changes,
+        q3_history: answers[3] ? answers[3].toString() : '',
+        q3_changes: q3Changes,
+        q4_history: answers[4] ? answers[4].toString() : '',
+        q4_changes: q4Changes,
+        q5_history: answers[5] ? answers[5].toString() : '',
+        q5_changes: q5Changes,
+        q6_history: answers[6] ? answers[6].toString() : '',
+        q6_changes: q6Changes
+    };
+    
+    // Calculate total changes
+    totalChanges = q1Changes + q2Changes + q3Changes + q4Changes + q5Changes + q6Changes;
+    
+    const completionScore = calculateCompletionScore();
+    
+    const payload = {
         module: 'Post Assessment',
-        action: 'completed',
+        action: action,
         language: 'en',
         userName: user.name,
         userEmail: user.email,
         userPosition: user.position,
         timestamp: new Date().toISOString(),
-        answers: answersData
+        answers: {
+            q1_confidence_safe: answers[1] || '',
+            q2_reaction_change: answers[2] || '',
+            q3_confidence_team: answers[3] || '',
+            q4_most_valuable: answers[4] || '',
+            q5_likelihood_use: answers[5] || '',
+            q6_overall_rating: answers[6] || '',
+            completionScore: completionScore
+        },
+        questionTexts: {
+            q1_text: QUESTION_TEXTS[1],
+            q2_text: QUESTION_TEXTS[2],
+            q3_text: QUESTION_TEXTS[3],
+            q4_text: QUESTION_TEXTS[4],
+            q5_text: QUESTION_TEXTS[5],
+            q6_text: QUESTION_TEXTS[6]
+        },
+        history: history,
+        totalChanges: totalChanges
     };
     
-    console.log('📤 Sending payload:', payload);
+    console.log('📤 Sending Post Assessment data (action: ' + action + '):', payload);
     
-    try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        const result = await response.json();
-        console.log('✅ Response:', result);
-        return result.success === true;
-    } catch (error) {
-        console.log('⚠️ Error:', error);
-        return true;
-    }
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('✅ Post Assessment data sent successfully:', data);
+        if (action === 'completed') {
+            showToast('✅ Assessment completed! Your results are saved.');
+        } else {
+            showToast('💾 Progress saved');
+        }
+    })
+    .catch(error => {
+        console.warn('⚠️ Error sending data:', error);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', GOOGLE_SCRIPT_URL, true);
+        xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
+        xhr.send(JSON.stringify(payload));
+    });
 }
 
 const assessmentQuestions = [
@@ -483,6 +582,8 @@ const assessmentQuestions = [
 
 let answers = {};
 let currentIndex = 0;
+let assessmentCompleted = false;
+let hasSentCompleted = false;
 
 for (let i = 1; i <= assessmentQuestions.length; i++) {
     const q = assessmentQuestions[i-1];
@@ -590,6 +691,52 @@ function showResults() {
     sendSection.classList.remove('hidden');
 }
 
+// ============================================
+// HANDLE NEXT - Sends data on every Next click
+// ============================================
+function handleNext() {
+    const currentQ = assessmentQuestions[currentIndex];
+    let currentAnswered = false;
+    if (currentQ.type === 'text') {
+        currentAnswered = (answers[currentIndex+1] && answers[currentIndex+1].trim() !== '');
+    } else {
+        currentAnswered = (answers[currentIndex+1] !== null && answers[currentIndex+1] !== '');
+    }
+    
+    if (!currentAnswered) {
+        showToast('⚠️ Please answer the current question.', true);
+        return;
+    }
+    
+    // ✅ Update previous answers before sending
+    updatePreviousAnswers();
+    
+    if (currentIndex < assessmentQuestions.length - 1) {
+        // Not last question - send as 'partial' (In Progress)
+        sendPostAssessmentData('partial');
+        currentIndex++;
+        renderQuestion();
+        prevBtn.disabled = false;
+        updateProgress();
+    } else {
+        // Last question - send as 'completed' ONLY ONCE
+        if (!hasSentCompleted) {
+            hasSentCompleted = true;
+            sendPostAssessmentData('completed');
+        }
+        showResults();
+    }
+}
+
+function handlePrev() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+        if (currentIndex === 0) prevBtn.disabled = true;
+        updateProgress();
+    }
+}
+
 async function sendResults() {
     const sendBtn = document.getElementById('sendResultsBtn');
     const feedbackDiv = document.getElementById('sendFeedback');
@@ -613,52 +760,18 @@ async function sendResults() {
     sendBtn.innerText = '🎓 Saving...';
     feedbackDiv.innerHTML = '⏳ Sending your assessment...';
     
-    const completionScore = calculateCompletionScore();
-    const answersData = {
-        q1_confidence_safe: answers[1] || '',
-        q2_reaction_change: answers[2] || '',
-        q3_confidence_team: answers[3] || '',
-        q4_most_valuable: answers[4] || '',
-        q5_likelihood_use: answers[5] || '',
-        q6_overall_rating: answers[6] || '',
-        completionScore: completionScore
-    };
+    // ✅ Send final completed data one more time to ensure it's saved
+    if (!hasSentCompleted) {
+        hasSentCompleted = true;
+        sendPostAssessmentData('completed');
+    }
     
-    await sendToGoogleSheet(answersData);
-    localStorage.setItem('post_assessment_completed', 'true');
+    localStorage.setItem('post_assessment_completed' + storageSuffix, 'true');
     localStorage.setItem('course_completed', 'true');
-    window.location.href = 'badge.html';
-}
-
-function handleNext() {
-    const currentQ = assessmentQuestions[currentIndex];
-    let currentAnswered = false;
-    if (currentQ.type === 'text') {
-        currentAnswered = (answers[currentIndex+1] && answers[currentIndex+1].trim() !== '');
-    } else {
-        currentAnswered = (answers[currentIndex+1] !== null && answers[currentIndex+1] !== '');
-    }
     
-    if (!currentAnswered) {
-        showToast('⚠️ Please answer the current question.', true);
-        return;
-    }
-    
-    if (currentIndex < assessmentQuestions.length - 1) {
-        currentIndex++;
-        renderQuestion();
-        prevBtn.disabled = false;
-    } else {
-        showResults();
-    }
-}
-
-function handlePrev() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        renderQuestion();
-        if (currentIndex === 0) prevBtn.disabled = true;
-    }
+    setTimeout(() => {
+        window.location.href = 'badge.html';
+    }, 1500);
 }
 
 // Initialize page
@@ -666,10 +779,35 @@ document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults
 prevBtn.addEventListener('click', handlePrev);
 nextBtn.addEventListener('click', handleNext);
 
-// Setup modal button
+// Load previous answers and check if already completed
+function init() {
+    const user = getUserData();
+    if (user.name && user.name !== 'Learner') {
+        updateUserBadge(user.name);
+        hideModal();
+    }
+    
+    loadPreviousAnswers();
+    
+    // Check if already completed
+    if (localStorage.getItem('post_assessment_completed' + storageSuffix) === 'true') {
+        // Show results but don't allow re-submission
+        showResults();
+        const sendBtn = document.getElementById('sendResultsBtn');
+        if (sendBtn) {
+            sendBtn.innerText = '✅ Already Completed';
+            sendBtn.disabled = true;
+        }
+        return;
+    }
+    
+    renderQuestion();
+    updateProgress();
+    prevBtn.disabled = true;
+}
+
 setupModalButton();
+init();
 </script>
 </body>
 </html>
-
-
