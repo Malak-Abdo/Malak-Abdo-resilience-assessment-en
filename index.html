@@ -238,7 +238,7 @@
             height: 100%;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             z-index: 10000;
@@ -302,7 +302,7 @@
 <body>
 
 <!-- MODAL FOR NAME INPUT - Always visible at start -->
-<div id="nameModal" class="name-modal" style="display: flex;">
+<div id="nameModal" class="name-modal">
     <div class="modal-content">
         <div style="font-size: 3rem;">👋🏅</div>
         <h2>Welcome to the Assessment</h2>
@@ -780,9 +780,9 @@ document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults
 prevBtn.addEventListener('click', handlePrev);
 nextBtn.addEventListener('click', handleNext);
 
-// ✅ ALWAYS SHOW THE MODAL FIRST - NO AUTO-HIDE
+// ✅ SHOW MODAL - ALWAYS VISIBLE AT START
 function init() {
-    // Always show the modal
+    // Always ensure modal is visible
     const modal = document.getElementById('nameModal');
     modal.style.display = 'flex';
     
@@ -806,14 +806,14 @@ function init() {
             sendBtn.innerText = '✅ Already Completed';
             sendBtn.disabled = true;
         }
+        // Hide modal if already completed
+        modal.style.display = 'none';
         return;
     }
 }
 
-// Start the app - setup modal button first
+// Start the app
 setupModalButton();
-
-// Then initialize
 init();
 </script>
 </body>
