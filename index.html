@@ -238,7 +238,7 @@
             height: 100%;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10000;
@@ -302,7 +302,7 @@
 <body>
 
 <!-- MODAL FOR NAME INPUT - Always visible at start -->
-<div id="nameModal" class="name-modal">
+<div id="nameModal" class="name-modal" style="display: flex;">
     <div class="modal-content">
         <div style="font-size: 3rem;">👋🏅</div>
         <h2>Welcome to the Assessment</h2>
@@ -780,14 +780,11 @@ document.getElementById('sendResultsBtn')?.addEventListener('click', sendResults
 prevBtn.addEventListener('click', handlePrev);
 nextBtn.addEventListener('click', handleNext);
 
-// ✅ SHOW MODAL - ALWAYS VISIBLE AT START
+// ✅ EXACTLY LIKE ARABIC VERSION - Shows modal, pre-fills if data exists
 function init() {
-    // Always ensure modal is visible
-    const modal = document.getElementById('nameModal');
-    modal.style.display = 'flex';
-    
-    // Pre-fill if data exists
     const user = getUserData();
+    
+    // ✅ Check if user already has data - pre-fill modal fields
     if (user.name && user.name !== 'Learner' && user.name !== '') {
         document.getElementById('userNameInput').value = user.name;
         document.getElementById('userEmailInput').value = user.email;
@@ -797,8 +794,9 @@ function init() {
     
     loadPreviousAnswers();
     
-    // Check if already completed
+    // ✅ Check if already completed
     if (localStorage.getItem('post_assessment_completed' + storageSuffix) === 'true') {
+        // ✅ Mark as completed so it doesn't send again
         hasSentCompleted = true;
         showResults();
         const sendBtn = document.getElementById('sendResultsBtn');
@@ -806,9 +804,18 @@ function init() {
             sendBtn.innerText = '✅ Already Completed';
             sendBtn.disabled = true;
         }
-        // Hide modal if already completed
-        modal.style.display = 'none';
         return;
+    }
+    
+    // ✅ Show modal if no user data (this is the key)
+    const modal = document.getElementById('nameModal');
+    if (!user.name || user.name === 'Learner' || user.name === '') {
+        modal.style.display = 'flex';
+    } else {
+        modal.style.display = 'none';
+        renderQuestion();
+        updateProgress();
+        prevBtn.disabled = true;
     }
 }
 
